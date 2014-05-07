@@ -1,0 +1,64 @@
+#lyrics {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: bold;
+  
+   position: absolute;
+    left: 50%;
+    top: 50%;
+
+    /*
+    *  Where the magic happens
+    *  Centering method from CSS Tricks
+    *  http://css-tricks.com/centering-percentage-widthheight-elements/
+    */
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+}
+.lyricspanel {
+	margin-top: 15px;
+	background-color: #B9AD98;
+	min-height: 46px;
+	border-radius: 5px;
+}
+
+#beats {
+  min-height: 16px;
+}
+
+
+#canvas {
+  display: block;
+  width: 1400px;
+  height: 800px;
+  margin: 0 auto;
+  margin-top: -335px;
+}
+
+#control {
+  position: absolute;
+  margin: 20px;
+}
+
+.test-btn {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 24px;
+  border: 3px solid rgb(30, 180, 100);
+  border-radius: 5px;
+  color: rgb(30, 180, 100);
+  text-transform: uppercase;
+  padding: 15px;
+  margin: 20px 0;
+}
+
+.test-btn:hover {
+  cursor: pointer;
+  color: #fff;
+  background-color: rgb(30, 180, 100);
+}
+
+body {
+  overflow: hidden;
+  background-color: #ffe9c4;
+}
