@@ -43,43 +43,131 @@ GypsyLoftSuite['4'] = function() {
 }
 
 //State variables for zigzag system
-GypsyLoftSuite['zigzag_counter'] = 0;
+//GypsyLoftSuite['zigzag_counter'] = 0;
 
 //not exactly a 'zigzag' yet, but that's what we're calling the function
-GypsyLoftSuite['zigzag'] = function() {
+GypsyLoftSuite['zigzag'] = function(namespace) {
 	//var iterations = 4;
+
+	var zigzag_counter_key = 'zigzag_counter';
 	
-	var origin_x = -7;
-	var origin_y = 10;
-	var origin_z = 0;
+	var zigzag_A_state_x_key = 'zigzag_A_state_x';
+	var zigzag_A_state_y_key = 'zigzag_A_state_y';
+	var zigzag_B_state_x_key = 'zigzag_B_state_x';
+	var zigzag_B_state_y_key = 'zigzag_B_state_y';
 	
+	var zigzag_A_delta_x_key = 'zigzag_A_delta_x';
+	var zigzag_A_delta_y_key = 'zigzag_A_delta_y';
+	var zigzag_B_delta_x_key = 'zigzag_B_delta_x';
+	var zigzag_B_delta_y_key = 'zigzag_B_delta_y';
 	
-	if (GypsyLoftSuite['zigzag_counter'] == 0) {
-		//things that need to happen only at initial conditions
-		iso.add(Shape.Prism(new Point(origin_x, origin_y, origin_z), 1, 1, 1), pinkish_2);
-	} else {
-		//things that run every call except the first
-		var i = GypsyLoftSuite['zigzag_counter'];
-		iso.add(Shape.Prism(new Point(origin_x + i, origin_y, origin_z), 1, 1, 1), pinkish_2);
-		iso.add(Shape.Prism(new Point(origin_x, origin_y + i, origin_z), 1, 1, 1), pinkish_2);
+	if (typeof namespace == 'string') {
+		zigzag_counter_key += ':' + namespace;
+		
+		zigzag_A_state_x_key += ':' + namespace;
+		zigzag_A_state_y_key += ':' + namespace;
+		zigzag_B_state_x_key += ':' + namespace;
+		zigzag_B_state_y_key += ':' + namespace;
+		
+		zigzag_A_delta_x_key += ':' + namespace;
+		zigzag_A_delta_y_key += ':' + namespace;
+		zigzag_B_delta_x_key += ':' + namespace;
+		zigzag_B_delta_y_key += ':' + namespace;
 	}
 	
 	
-	//for (var i = 1; i <= iterations; i++) {
+	var origin_z = 0;
+	
+	
+	if (GypsyLoftSuite[zigzag_counter_key] == undefined) {
+		//things that need to happen only at initial conditions
+		
+		//origin coordinates
+		GypsyLoftSuite[zigzag_A_state_x_key] = GypsyLoftSuite[zigzag_B_state_x_key] = -7;
+		GypsyLoftSuite[zigzag_A_state_y_key] = GypsyLoftSuite[zigzag_B_state_y_key] = +10;
 	
 		
-	//}
-	
-	/*
-	iso.add(Shape.Prism(new Point(-6, 10, 0), 1, 1, 1), pinkish_2);
-	iso.add(Shape.Prism(new Point(-7, 11, 0), 1, 1, 1), pinkish_2);
-	
-	iso.add(Shape.Prism(new Point(-5, 10, 0), 1, 1, 1), pinkish_2);
-	iso.add(Shape.Prism(new Point(-7, 12, 0), 1, 1, 1), pinkish_2);
-	*/
+		GypsyLoftSuite[zigzag_counter_key] = 0;
+		
+		GypsyLoftSuite[zigzag_A_delta_x_key] = +1;
+		GypsyLoftSuite[zigzag_A_delta_y_key] = 0;
+		
+		GypsyLoftSuite[zigzag_B_delta_x_key] = 0;
+		GypsyLoftSuite[zigzag_B_delta_y_key] = +1;
+		
+		
+		iso.add(Shape.Prism(new Point(GypsyLoftSuite[zigzag_A_state_x_key], GypsyLoftSuite[zigzag_A_state_y_key], origin_z), 1, 1, 1), pinkish_2);
+	} else {
+		//things that run every call except the first
+		
+		//update trajectory based on bounds
+		var max_x = 27;
+		var min_x = -27
+		
+		var max_y = 12;
+		var min_y = -12;
+		
+		var max_sum = 35;
+		var min_sum = -10;
+		
+		if (GypsyLoftSuite[zigzag_A_state_x_key] + GypsyLoftSuite[zigzag_A_state_y_key] > max_sum) {
+			//if we're over the maximum
+			if (GypsyLoftSuite[zigzag_A_delta_x_key] > 0) {
+				GypsyLoftSuite[zigzag_A_delta_x_key] = -1;
+				GypsyLoftSuite[zigzag_A_delta_y_key] = -1;
+			} else if (GypsyLoftSuite[zigzag_A_delta_y_key] > 0) {
+				GypsyLoftSuite[zigzag_A_delta_x_key] = -1;
+				GypsyLoftSuite[zigzag_A_delta_y_key] = -1;
+			}
+		} else if (GypsyLoftSuite[zigzag_A_state_x_key] + GypsyLoftSuite[zigzag_A_state_y_key] < min_sum) {
+			//if we're under the minimum
+			if (GypsyLoftSuite[zigzag_A_delta_x_key] < 0) {
+				GypsyLoftSuite[zigzag_A_delta_x_key] = +1;
+				GypsyLoftSuite[zigzag_A_delta_y_key] = +1;
+			} else if (GypsyLoftSuite[zigzag_A_delta_y_key] < 0) {
+				GypsyLoftSuite[zigzag_A_delta_x_key] = +1;
+				GypsyLoftSuite[zigzag_A_delta_y_key] = +1;
+			}
+		}
+		
+		
+		if (GypsyLoftSuite[zigzag_A_state_x_key] < max_x || GypsyLoftSuite[zigzag_A_delta_x_key] == 0) {
+			//if A is within X max bounds
+		} else {
+			//if A gets out of X max bounds
+			GypsyLoftSuite[zigzag_A_delta_x_key] = 0;
+			GypsyLoftSuite[zigzag_A_delta_y_key] = +1;
+		}
+		
+		if (GypsyLoftSuite[zigzag_A_state_y_key] < max_y || GypsyLoftSuite[zigzag_A_delta_y_key] == 0) {
+			//if A is within Y max bounds
+		} else {
+			//if A gets out of Y max bounds
+			GypsyLoftSuite[zigzag_A_delta_x_key] = -1;
+			GypsyLoftSuite[zigzag_A_delta_y_key] = 0;
+		}
+		
+		GypsyLoftSuite[zigzag_A_state_x_key] += GypsyLoftSuite[zigzag_A_delta_x_key]; //observed 27 is top at origin y=10
+		GypsyLoftSuite[zigzag_A_state_y_key] += GypsyLoftSuite[zigzag_A_delta_y_key]; //statis
+		GypsyLoftSuite[zigzag_B_state_x_key] += GypsyLoftSuite[zigzag_B_delta_x_key]; //statis
+		GypsyLoftSuite[zigzag_B_state_y_key] += GypsyLoftSuite[zigzag_B_delta_y_key];
+		
+		
+		
+		console.log('zigzag'+(namespace ? '_'+namespace : '') +' ('+GypsyLoftSuite[zigzag_A_state_x_key]+', '+GypsyLoftSuite[zigzag_A_state_y_key]+'),  ('+GypsyLoftSuite[zigzag_A_state_x_key]+','+GypsyLoftSuite[zigzag_B_state_y_key]+')');
+		
+		
+		
+		
+		//A
+		iso.add(Shape.Prism(new Point(GypsyLoftSuite[zigzag_A_state_x_key], GypsyLoftSuite[zigzag_A_state_y_key], origin_z), 1, 1, 1), pinkish_2); //start going up right
+		
+		//B
+		//iso.add(Shape.Prism(new Point(GypsyLoftSuite[zigzag_B_state_x_key], GypsyLoftSuite[zigzag_B_state_y_key], origin_z), 1, 1, 1), pinkish_2); //start going up left
+	}
 	
 	//update state
-	GypsyLoftSuite['zigzag_counter']++;
+	GypsyLoftSuite[zigzag_counter_key]++;
 }
 
 GypsyLoftSuite['house'] = function() {
